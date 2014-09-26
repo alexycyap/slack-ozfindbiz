@@ -2,6 +2,7 @@ slack-ozfindbiz
 ===============
 
 Slack Outgoing WebHook Integration to search for Australian businesses and POIs.
+Runs on *Google App Engine*.
 
 
 INSTALL
