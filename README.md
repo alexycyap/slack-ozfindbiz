@@ -34,6 +34,7 @@ Start it locally:
 `$ gradle appengineRun`
 
 Paste this in your browser
+
 http://localhost:8080/searchBiz?text=find%20me%20cafes&token=your_slack_token
 
 You should see a JSON formatted text listing some cafes around the default location you've specified.
@@ -42,7 +43,7 @@ If it doesn't work, look at the console for errors.
 
 UPLOAD
 ------
-$ gradle appengineUpdate
+`$ gradle appengineUpdate`
 
 
 SLACK CONFIGURATION
@@ -72,8 +73,11 @@ Examples:
 You can replace "find me " with "search for ", they are treated exactly the same.
 If you start with "map me " instead, it will paste a single Google Static Map link into the Slack response so that the map is fetched.
 
-Note that the "what" part (business type or name) of the query is separated from the "where" part using a join word.
-Valid join words are: near, in, around, nearby, on, at 
+Note that the *what* part (business type or name) of the query is separated from the *where* part using a join word.
+Valid join words are: 
+
+*near*, *in*, *around*, *nearby*, *on*, *at* 
+
 They are all treated exactly the same, there is no semantic difference between them.
 
 The last 2 examples use landmarks as location. Landmarks may be popular tourist sites, shopping centres, big parks, etc. 
@@ -89,6 +93,7 @@ configuration in file
 Then change the following configurations to the following values:
 * **ozfindbiz.sapi.listingsEndPoint** : /ob-20110511/prod/search
 * **ozfindbiz.sapi.landmarkEndPoint** : /ob-20110511/prod/oneSearch
+
 i.e. change the "test" to "prod"
 
  
