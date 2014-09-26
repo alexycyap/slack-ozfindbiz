@@ -1,0 +1,17 @@
+{ 
+    "ozfindbiz": {
+        "sapi": {
+            "host": "api.sensis.com.au",
+            "listingsEndPoint": "/ob-20110511/test/search",
+            "landmarkEndPoint": "/ob-20110511/test/oneSearch",
+            "key": "Your SAPI Key here"
+        },
+        "slack" : {
+            "tokens": [ "One or more Slack Outgoing WebHook tokens as a JSON array, or empty array to allow any Slack account to use this service." ]
+        },
+        "resultSize" : "5",
+        "defaultLocation": "Location to use if not specified by user, may be a geocode (e.g. -37.811127,144.965114) or address text (e.g. melbourne vic). Must be within Australia."       
+    }
+
+
+}

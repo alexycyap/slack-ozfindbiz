@@ -1,0 +1,9 @@
+build/
+data-backup/
+.settings/
+.project
+.classpath
+.directory
+src/main/webapp/config.json
+src/main/webapp/WEB-INF/appengine-web.xml
+
