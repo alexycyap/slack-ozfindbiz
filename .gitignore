@@ -4,6 +4,7 @@ data-backup/
 .project
 .classpath
 .directory
+.gradle/
 src/main/webapp/config.json
 src/main/webapp/WEB-INF/appengine-web.xml
 

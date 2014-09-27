@@ -26,7 +26,6 @@ class SapiDataSource {
         def listingsSapiParams = [
                         query: what,
                         location: where,
-                        sortBy: 'DISTANCE',
                         sensitiveCategories: true,
                         includePois: true,
                         rows: 50,
@@ -52,6 +51,7 @@ class SapiDataSource {
         
         // LOG.info("Searching for ${what} around ${listingsSapiParams.location}...")
         if (whereLikelyGeocode || whereLikelyLandmark) {
+            listingsSapiParams.sortBy = 'DISTANCE'
             while ((searchResults.listings.size() < resultSize) && listingsSapiParams.radius < 100) {
                 searchResults = searchListingsWithParams(listingsSapiParams)
                 
