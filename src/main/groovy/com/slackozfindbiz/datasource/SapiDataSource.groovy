@@ -20,8 +20,11 @@ class SapiDataSource {
     def search(what, where) {
         def whereHasAlpha = where.matches('.*[a-z].*')
         def whereHasComma = where.contains(',')
+        def startsWithNumber = where.matches('^[0-9].*')
+        def startsWithFourNumbers = where.matches('^[0-9][0-9][0-9][0-9].*')
         def whereLikelyGeocode = whereHasComma && !whereHasAlpha
         def whereLikelyLandmark = false
+        def whereLikelyPropertyAddress = startsWithNumber && (!startsWithFourNumbers) && whereHasAlpha && (where.length() > 10)
         
         def listingsSapiParams = [
                         query: what,
@@ -40,7 +43,11 @@ class SapiDataSource {
 
         if (whereLikelyGeocode) {
             listingsSapiParams.radius = 0.5
-        } else if (where.matches('^[^0-9].*')) {   // Does not start with number
+            LOG.info("${where} is treated as a geocode")
+        } else if (whereLikelyPropertyAddress) {
+            listingsSapiParams.radius = 1.0
+            LOG.info("${where} is treated as a property address")
+        } else if (!startsWithNumber) {   
             def landmarkGeocode = queryForLandmark(where)
             if (landmarkGeocode) {
                 whereLikelyLandmark = true
@@ -50,7 +57,7 @@ class SapiDataSource {
         }
         
         // LOG.info("Searching for ${what} around ${listingsSapiParams.location}...")
-        if (whereLikelyGeocode || whereLikelyLandmark) {
+        if (whereLikelyGeocode || whereLikelyPropertyAddress || whereLikelyLandmark) {
             listingsSapiParams.sortBy = 'DISTANCE'
             while ((searchResults.listings.size() < resultSize) && listingsSapiParams.radius < 100) {
                 searchResults = searchListingsWithParams(listingsSapiParams)
@@ -85,7 +92,7 @@ class SapiDataSource {
                 def jsonInput = new JsonSlurper().parseText(responseText)
                 if (jsonInput.results) {
                     jsonInput.results.each({ landmark ->
-                        LOG.info("${where} identified as a landmark located in ${landmark.primaryAddress?.suburb} ${landmark.primaryAddress?.state}")
+                        LOG.info("${where} is treated as a landmark located in ${landmark.primaryAddress?.suburb} ${landmark.primaryAddress?.state}")
                         landmarkGeocode = [
                             latitude: landmark.primaryAddress?.latitude,
                             longitude: landmark.primaryAddress?.longitude

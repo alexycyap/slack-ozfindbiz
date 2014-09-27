@@ -12,7 +12,7 @@ INSTALL
 
 Edit *src/main/webapp/config.json* and fill in values for:
 
-* **ozfindbiz.sapi.key** : Go to http://developers.sensis.com.au and register for a SAPI API Test key and paste it here.
+* **ozfindbiz.sapi.key** : Go to http://developers.sensis.com.au and register for a SAPI API Test key (for free) and paste it here.
 * **ozfindbiz.slack.tokens** : Get the token from the Slack Outgoing WebHook integration page and paste it here.
 * **ozfindbiz.defaultLocation** : Enter a location that will be searched if a location is not specified by the user. May be a geocode or address text. Must be within Australia.
 
