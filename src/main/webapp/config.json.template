@@ -1,9 +1,7 @@
 { 
     "ozfindbiz": {
         "sapi": {
-            "host": "api.sensis.com.au",
-            "listingsEndPoint": "/ob-20110511/test/search",
-            "landmarkEndPoint": "/ob-20110511/test/oneSearch",
+            "mode": "test",
             "key": "Your SAPI Key here"
         },
         "slack" : {

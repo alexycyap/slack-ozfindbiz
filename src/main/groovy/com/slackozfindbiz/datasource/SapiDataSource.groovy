@@ -9,12 +9,18 @@ class SapiDataSource {
     private final static def MAX_TRIES = 5
     private final static def MAX_RESULT_SIZE = 20
     private final static def REQUEST_CONNECTION_MAP = [connectTimeout:5000, readTimeout:20000, requestProperties: ['Content-Type': 'application/json']]
+    private final static def SAPI_HOST = 'http://api.sensis.com.au'
     def config
     def resultSize
+    def listingsEndPoint
+    def landmarkEndPoint
     
     def SapiDataSource(config) {
         this.config = config
         this.resultSize = Math.min( MAX_RESULT_SIZE, config.ozfindbiz.resultSize.toInteger())
+        def sapiMode = config.ozfindbiz.sapi.mode
+        this.listingsEndPoint = "/v1/${ sapiMode }/search"
+        this.landmarkEndPoint = "/v1/${ sapiMode }/oneSearch"
     }
     
     def search(what, where) {
@@ -85,7 +91,7 @@ class SapiDataSource {
                         key: config.ozfindbiz.sapi.key
                         ]
         
-        def url = new URIBuilder("http://${config.ozfindbiz.sapi.host}").setPath(config.ozfindbiz.sapi.landmarkEndPoint).setQuery(landmarkSapiParams).toURL()
+        def url = new URIBuilder(SAPI_HOST).setPath(landmarkEndPoint).setQuery(landmarkSapiParams).toURL()
         try {
             def responseText = url.getText(REQUEST_CONNECTION_MAP)
             if (responseText) {
@@ -114,7 +120,7 @@ class SapiDataSource {
         
         def listings = []
         def searchCentre = null
-        def url = new URIBuilder("http://${config.ozfindbiz.sapi.host}").setPath(config.ozfindbiz.sapi.listingsEndPoint).setQuery(sapiParams).toURL()
+        def url = new URIBuilder(SAPI_HOST).setPath(listingsEndPoint).setQuery(sapiParams).toURL()
         // LOG.info("About to query ${url}")
         def success = false
         def tries = 0

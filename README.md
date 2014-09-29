@@ -91,10 +91,9 @@ When you've finally obtained your SAPI API Prod key, paste it into the
 **ozfindbiz.sapi.key**
 configuration in file
 *src/main/webapp/config.json*
-Then change the following configurations to the following values:
-* **ozfindbiz.sapi.listingsEndPoint** : /ob-20110511/prod/search
-* **ozfindbiz.sapi.landmarkEndPoint** : /ob-20110511/prod/oneSearch
+Then change the 
+**ozfindbiz.sapi.mode** 
+configuration from *test* to *prod* .
 
-i.e. change the "test" to "prod"
 
  
