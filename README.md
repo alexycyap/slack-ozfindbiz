@@ -1,8 +1,8 @@
 slack-ozfindbiz
 ===============
 
-Slack Outgoing WebHook Integration to search for Australian businesses and POIs.
-Runs on *Google App Engine*.
+Slack Outgoing WebHook Integration to search for Australian businesses and POIs using the *Sensis* API.
+Runs on *Google App Engine*. 
 
 
 INSTALL
@@ -12,7 +12,7 @@ INSTALL
 
 Edit *src/main/webapp/config.json* and fill in values for:
 
-* **ozfindbiz.sapi.key** : Go to http://developers.sensis.com.au and register for a SAPI API Test key (for free) and paste it here.
+* **ozfindbiz.sapi.key** : Go to http://developers.sensis.com.au and register for a Sensis API Test key (for free) and paste it here.
 * **ozfindbiz.slack.tokens** : Get the token from the Slack Outgoing WebHook integration page and paste it here.
 * **ozfindbiz.defaultLocation** : Enter a location that will be searched if a location is not specified by the user. May be a geocode or address text. Must be within Australia.
 
@@ -24,7 +24,7 @@ You may optionally change:
 `$ cp src/main/webapp/WEB-INF/appengine-web.xml.template src/main/webapp/WEB-INF/appengine-web.xml`
 
 Edit *src/main/webapp/WEB-INF/appengine-web.xml* to fill in your Google App Engine application name within the
-**<application></application>** tags.
+`<application></application>` tags.
 
 
 TEST
