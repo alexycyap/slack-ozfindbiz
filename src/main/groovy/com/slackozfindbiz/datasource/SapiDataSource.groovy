@@ -14,6 +14,7 @@ class SapiDataSource {
     def resultSize
     def listingsEndPoint
     def landmarkEndPoint
+    def reportEndPoint
     
     def SapiDataSource(config) {
         this.config = config
@@ -21,6 +22,7 @@ class SapiDataSource {
         def sapiMode = config.ozfindbiz.sapi.mode
         this.listingsEndPoint = "/v1/${ sapiMode }/search"
         this.landmarkEndPoint = "/v1/${ sapiMode }/oneSearch"
+        this.reportEndPoint = "/v1/${ sapiMode }/report"
     }
     
     def search(what, where) {
@@ -139,6 +141,7 @@ class SapiDataSource {
                             sapiListing.url = listing.detailsLink
                             sapiListing.latitude = listing.primaryAddress?.latitude
                             sapiListing.longitude = listing.primaryAddress?.longitude
+                            sapiListing.reportingId = listing.reportingId
                             sapiListing
                         }) )
                         
@@ -168,6 +171,40 @@ class SapiDataSource {
             listings : listings,
             searchCentre: searchCentre
         ]  
+    }
+    
+    def reportAppearance(listings, userIp, userSessionId) {
+        report(listings,'appearance', userIp, userSessionId)
+    }
+
+    def reportViewMap(listings, userIp, userSessionId) {
+        report(listings,'viewMap', userIp, userSessionId)
+    }
+    
+    private def report(listings, eventType, userIp, userSessionId) {
+        def reportingIds = listings.findAll({ it.reportingId != null }).collect({ it.reportingId })
+        if (! reportingIds.empty) {
+            def sapiParams = [
+                             userIp: userIp,
+                             userSessionId: userSessionId,
+                             id: reportingIds,
+                             key: config.ozfindbiz.sapi.key
+                             ]
+            def url = new URIBuilder(SAPI_HOST).setPath(reportEndPoint + '/' + eventType).setQuery(sapiParams).toURL()
+            //LOG.info("About to post to ${url}")
+
+            try {
+                def sapiResponse = url.post( )
+                if (sapiResponse.statusCode in 200..299 ) {
+                    LOG.info("Successfully reported eventType ${eventType}.")
+                } else {
+                    LOG.severe("Got error code ${sapiResponse.statusCode} while trying to report eventType ${eventType}.")
+                }
+                
+            } catch (Exception e) {
+                LOG.severe("Error reporting eventType ${eventType} : ${e.class.name} : ${e.message}")
+            }
+        }
     }
 
 }

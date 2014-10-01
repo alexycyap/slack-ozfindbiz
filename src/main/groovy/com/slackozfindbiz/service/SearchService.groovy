@@ -20,7 +20,7 @@ class SearchService {
         this.slackTokens = config.ozfindbiz.slack.tokens
     }
     
-    def search( params ) {
+    def search( params, userIp, userSessionId ) {
         def token = params.token
         def tokenIsValid = (slackTokens.size() == 0) || (token != null && slackTokens.contains(token))
         
@@ -60,6 +60,12 @@ class SearchService {
                 def fullMapUrl = MAP_BASE_URL + mapCenterParam + markerParams.join('')
                 def mapText = mapLinkOnly ? '(<' + StringUtils.encodeForSlack(fullMapUrl) + '|Map view>) ' : ''
                 outText = "${parts.what}${parts.joinWord}${parts.where} ${mapText}:\\n" + lines.join(",\\n")
+                
+                // TODO Make these calls async if they cause too much delay
+                sapiDataSource.reportAppearance(listings, userIp, userSessionId)
+                if (mapLinkOnly) {
+                    sapiDataSource.reportViewMap(listings, userIp, userSessionId)
+                }
             }
         }
         

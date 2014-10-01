@@ -7,4 +7,5 @@ class SapiListing {
     def latitude
     def longitude
     def position
+    def reportingId
 } 
