@@ -3,6 +3,9 @@ import groovy.json.JsonSlurper
 import groovyx.gaelyk.logging.GroovyLogger
 import groovyx.net.http.URIBuilder
 import com.slackozfindbiz.domain.SapiListing
+import com.slackozfindbiz.algorithm.NameNormalizer
+import com.slackozfindbiz.algorithm.ListingMatcher
+
 
 class SapiDataSource {
     private final static def LOG = new GroovyLogger(SapiDataSource.class.name)  
@@ -134,16 +137,36 @@ class SapiDataSource {
                     def jsonInput = new JsonSlurper().parseText(responseText)
                     if (jsonInput.results) {
                         success = true
-                        listings.addAll( jsonInput.results.take(resultSize).collect({ listing ->
+                        def allListings = []
+                        allListings.addAll( jsonInput.results.collect({ listing ->
                             def sapiListing = new SapiListing()
+                            sapiListing.id = listing.id
                             sapiListing.name = listing.name
-                            sapiListing.address = (listing.primaryAddress?.addressLine ? listing.primaryAddress?.addressLine + ', '  : '') + listing.primaryAddress.suburb
+                            sapiListing.rankScore = calculateRankScore(listing)                            
+                            sapiListing.displayAddress = (listing.primaryAddress.addressLine ? listing.primaryAddress.addressLine + ', '  : '') + listing.primaryAddress.suburb
+                            sapiListing.streetAddressLine = listing.primaryAddress.addressLine?.toLowerCase()
+                            sapiListing.suburb = listing.primaryAddress.suburb.toLowerCase()
+                            sapiListing.postcode = listing.primaryAddress.postcode
                             sapiListing.url = listing.detailsLink
                             sapiListing.latitude = listing.primaryAddress?.latitude
                             sapiListing.longitude = listing.primaryAddress?.longitude
                             sapiListing.reportingId = listing.reportingId
+                            sapiListing.categoryName = (listing?.categories[0]?.id != '2') ? listing?.categories[0]?.name : null
                             sapiListing
                         }) )
+                        
+                        def firstListingWithCategory = allListings.find { it.categoryName != null }
+                        def topCategory = (firstListingWithCategory != null) ? firstListingWithCategory.categoryName : ''
+                        allListings = allListings.collect { lst ->
+                            if (lst.categoryName == null) {
+                                lst.categoryName = topCategory
+                            }
+                            def phrasesToRemove = [ lst.suburb ]
+                            lst.nameTokens = NameNormalizer.tokenise(lst.name, phrasesToRemove)
+                            lst
+                        }
+                        
+                        listings = new ListingMatcher().dedup(allListings, resultSize)
                         
                         listings.eachWithIndex { listing, index -> 
                             listing.position = index + 1
@@ -205,6 +228,28 @@ class SapiDataSource {
                 LOG.severe("Error reporting eventType ${eventType} : ${e.class.name} : ${e.message}")
             }
         }
+    }
+    
+    // POI gets score of 0, White gets 1, Free Yellow gets 2, Paid Yellow gets 2+
+    private calculateRankScore(listing) {
+        def score = 0
+        if (listing.detailsLink) {
+            score = score + (listing.detailsLink.contains('yellowpages.com.au') ? 2 : 1)
+        }
+        
+        if (listing.openingHours) {
+            score = score + 1
+        }
+        
+        if (listing.imageGallery) {
+            score = score + 1
+        }
+        
+        if (listing.businessLogo) {
+            score = score + 1
+        }
+        
+        score
     }
 
 }

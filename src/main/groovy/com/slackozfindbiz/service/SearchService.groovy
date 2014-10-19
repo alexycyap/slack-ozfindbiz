@@ -46,7 +46,7 @@ class SearchService {
             LOG.info("Found ${listings.size()} ${parts.what}${parts.joinWord}${parts.where}.")
             
             def lines = listings.collect({ listing -> 
-                def listingText = StringUtils.encodeForSlack(listing.name + ' at ' + listing.address)
+                def listingText = StringUtils.encodeForSlack(listing.name + ' at ' + listing.displayAddress)
                 def shouldGenerateListingLink = listing.url && !mapLinkOnly
                 "${listing.position}. " + (shouldGenerateListingLink ? '<' + StringUtils.encodeForSlack(listing.url) + '|' + listingText + '>' : listingText)
             })
