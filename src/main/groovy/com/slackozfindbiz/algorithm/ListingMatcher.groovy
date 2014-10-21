@@ -1,10 +1,12 @@
 package com.slackozfindbiz.algorithm
 import groovyx.gaelyk.logging.GroovyLogger
 import com.google.common.geometry.S2LatLng
+import com.slackozfindbiz.utils.StringUtils
 
 class ListingMatcher {
     private final static def LOG = new GroovyLogger(ListingMatcher.class.name)  
     private final static def THRESHOLD_DISTANCE_METERS = 10
+    private final static double NAME_OVERLAP_THRESHOLD = 0.55
     
     def dedup( listings, resultSize ) {
         listings.inject([]) { uniqueList, listing ->
@@ -48,12 +50,9 @@ class ListingMatcher {
         def combinedCategories = [ listing1.categoryName, listing2.categoryName ]
         def listing1NormName = NameNormalizer.removeCategoryNamesFromTokens(listing1.nameTokens, combinedCategories).join(' ')
         def listing2NormName = NameNormalizer.removeCategoryNamesFromTokens(listing2.nameTokens, combinedCategories).join(' ')
-        stringContainsMinSubstring(listing1NormName, listing2NormName) || stringContainsMinSubstring(listing2NormName, listing1NormName)
-    }
-    
-    // Match is substring is more than half of the string
-    private def stringContainsMinSubstring(string, substring) {
-        string.contains(substring) && (substring.length() > (string.length() / 2))   
+        double overlapRatio = StringUtils.overlapFromLeftRatio(listing1NormName, listing2NormName)
+        // LOG.info('Overlapping ' + listing1NormName + ' : ' + listing2NormName + ' , ratio = ' + overlapRatio)
+        overlapRatio > NAME_OVERLAP_THRESHOLD
     }
     
     private def distanceWithinThreshold(listing1, listing2) {
