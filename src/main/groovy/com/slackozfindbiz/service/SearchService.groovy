@@ -38,6 +38,7 @@ class SearchService {
          
         if (tokenIsValid && inText != null && inText.startsWith(searchPrefix) && inText.length() > searchPrefix.length()) {
             def queryText = inText.substring(searchPrefix.length())
+            LOG.info("Query text : " + queryText)
             def parts = splitIntoWhatWhere(queryText)
             LOG.info("Searching for ${parts.what}${parts.joinWord}${parts.where} ...")
             def searchResults = sapiDataSource.search( parts.what, parts.where )
@@ -50,8 +51,11 @@ class SearchService {
                 def shouldGenerateListingLink = listing.url && !mapLinkOnly
                 "${listing.position}. " + (shouldGenerateListingLink ? '<' + StringUtils.encodeForSlack(listing.url) + '|' + listingText + '>' : listingText)
             })
+            
+            def whatAndWhereMsg = StringUtils.encodeForSlack("${parts.what}${parts.joinWord}${parts.where}")
+            
             if (lines.empty) {
-                outText = "Found no ${parts.what}${parts.joinWord}${parts.where}."
+                outText = "Found no ${whatAndWhereMsg}."
             } else {
                 def mapCenterParam = centre ? "&center=${centre.latitude},${centre.longitude}" : ''
                 def markerParams = listings.collect({ listing -> 
@@ -59,7 +63,7 @@ class SearchService {
                 })
                 def fullMapUrl = MAP_BASE_URL + mapCenterParam + markerParams.join('')
                 def mapText = mapLinkOnly ? '(<' + StringUtils.encodeForSlack(fullMapUrl) + '|Map view>) ' : ''
-                outText = "${parts.what}${parts.joinWord}${parts.where} ${mapText}:\\n" + lines.join(",\\n")
+                outText = "${whatAndWhereMsg} ${mapText}:\\n" + lines.join(",\\n")
                 
                 // TODO Make these calls async if they cause too much delay
                 sapiDataSource.reportAppearance(listings, userIp, userSessionId)
@@ -101,8 +105,8 @@ class SearchService {
         } 
         
         [
-            what: what,
-            where: where,
+            what: StringUtils.decodeFromSlack(what),
+            where: StringUtils.decodeFromSlack(where),
             joinWord: joinWord
         ]
     }

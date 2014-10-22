@@ -66,6 +66,8 @@ class ListingMatcher {
     private double distanceBetween(listing1, listing2) {
         def latLng1 = S2LatLng.fromDegrees(listing1.latitude.toDouble(), listing1.longitude.toDouble())
         def latLng2 = S2LatLng.fromDegrees(listing2.latitude.toDouble(), listing2.longitude.toDouble())
-        latLng1.getEarthDistance(latLng2)
+        def dist = latLng1.getEarthDistance(latLng2)
+        //LOG.info('Distance from ' + listing1.id + ' to ' + listing2.id + ' : ' + dist)
+        dist
     }
 }

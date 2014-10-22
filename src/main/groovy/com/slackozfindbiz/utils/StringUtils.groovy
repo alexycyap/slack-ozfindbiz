@@ -6,6 +6,10 @@ class StringUtils {
         inText?.replaceAll('&','&amp;')?.replaceAll('<','&lt;')?.replaceAll('>','&gt;')
     }
 
+    static decodeFromSlack(inText) {
+        inText?.replaceAll('&amp;','&')?.replaceAll('&lt;','<')?.replaceAll('&gt;','>')
+    }
+
     // Matching the strings starting from the left-side (more meaningful) towards the right (less meaningful), till where they differ.
     // The index where they differ is diffIndex
     // Returns the ratio of diffIndex over the length of the longer string.
