@@ -139,6 +139,10 @@ class SapiDataSource {
                         success = true
                         def allListings = []
                         allListings.addAll( jsonInput.results.collect({ listing ->
+
+                            def reviewSummaries = listing.reviewSummaries ? listing.reviewSummaries : []
+                            def yelpSummary = reviewSummaries.find { it.namespace == 'http://www.yelp.com.au' }
+
                             def sapiListing = new SapiListing()
                             sapiListing.id = listing.id
                             sapiListing.name = listing.name
@@ -152,6 +156,7 @@ class SapiDataSource {
                             sapiListing.longitude = listing.primaryAddress?.longitude
                             sapiListing.reportingId = listing.reportingId
                             sapiListing.categoryName = (listing?.categories[0]?.id != '2') ? listing?.categories[0]?.name : null
+                            sapiListing.yelpUrl = yelpSummary?.businessPageUrl
                             sapiListing
                         }) )
                         
@@ -247,6 +252,11 @@ class SapiDataSource {
         
         if (listing.businessLogo) {
             score = score + 1
+        }
+
+        // Treat Yelp as a trusted external validation of this listing.
+        if (listing.yelpUrl) {
+            score = score + 5        
         }
         
         score

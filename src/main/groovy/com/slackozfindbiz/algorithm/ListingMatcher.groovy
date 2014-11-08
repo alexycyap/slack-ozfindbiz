@@ -31,10 +31,15 @@ class ListingMatcher {
         
     private def listingIndexInList(theList, listing) {
         theList.findIndexOf { fromTheList ->
-            nameExceedsThresholdMatch(fromTheList, listing) && (distanceWithinThreshold(fromTheList, listing) || addressMatch(fromTheList, listing))
+            yelpUrlMatch(fromTheList, listing) || 
+            (nameExceedsThresholdMatch(fromTheList, listing) && (distanceWithinThreshold(fromTheList, listing) || addressMatch(fromTheList, listing)))
         }
     }
     
+    private def yelpUrlMatch(listing1, listing2) {
+        (listing1.yelpUrl != null) && (listing1.yelpUrl == listing2.yelpUrl)       
+    }
+
     private def addressMatch(listing1, listing2) {
         if ((listing1.suburb == listing2.suburb) && (listing1.postcode = listing2.postcode)) {
             def normalizedStreet1 = StreetAddressLineNormalizer.normalize(listing1.streetAddressLine)

@@ -15,7 +15,8 @@ class SapiListing {
     def position
     def reportingId
     def categoryName
-    
+    def yelpUrl    
+
     def hasGeocode() {
         latitude != null && longitude != null
     }
