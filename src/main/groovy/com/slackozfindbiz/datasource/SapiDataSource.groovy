@@ -155,7 +155,7 @@ class SapiDataSource {
                             sapiListing.latitude = listing.primaryAddress?.latitude
                             sapiListing.longitude = listing.primaryAddress?.longitude
                             sapiListing.reportingId = listing.reportingId
-                            sapiListing.categoryName = (listing?.categories[0]?.id != '2') ? listing?.categories[0]?.name : null
+                            sapiListing.categoryName = listing.categories ? listing.categories[0]?.name : null
                             sapiListing.yelpUrl = yelpSummary?.businessPageUrl
                             sapiListing
                         }) )
