@@ -6,7 +6,7 @@ import com.slackozfindbiz.utils.StringUtils
 
 class SearchService {
     private final static def LOG = new GroovyLogger(SearchService.class.name)
-    private final static def SEARCH_PREFIXES = [ 'find me ', 'search for ', 'map me ' ]
+    private final static def SEARCH_PREFIXES = [ '/find me ', '/search for ', '/map me ' ]
     private final static def WHAT_WHERE_SEPARATORS = [ ' near ', ' in ', ' around ', ' nearby ', ' on ', ' at ' ]
     private final static def MAP_BASE_URL = 'http://maps.googleapis.com/maps/api/staticmap?size=400x400&maptype=roadmap'
     

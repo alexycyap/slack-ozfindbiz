@@ -12,7 +12,7 @@ INSTALL
 
 Edit *src/main/webapp/config.json* and fill in values for:
 
-* **ozfindbiz.sapi.key** : Go to http://developers.sensis.com.au and register for a Sensis API Test key (for free) and paste it here.
+* **ozfindbiz.sapi.key** : Go to http://developers.sensis.com.au and register for a Sensis API Test key and paste it here.
 * **ozfindbiz.slack.tokens** : Get the token from the Slack Outgoing WebHook integration page and paste it here.
 * **ozfindbiz.defaultLocation** : Enter a location that will be searched if a location is not specified by the user. May be a geocode or address text. Must be within Australia.
 
@@ -36,7 +36,7 @@ Start it locally:
 
 Paste this in your browser
 
-http://localhost:8080/searchBiz?text=find%20me%20cafes&token=your_slack_token
+http://localhost:8080/searchBiz?text=/find%20me%20cafes&token=your_slack_token
 
 You should see a JSON formatted text listing some cafes around the default location you've specified.
 If it doesn't work, look at the console for errors.
@@ -51,7 +51,7 @@ SLACK CONFIGURATION
 -------------------
 From the Slack service page, create an Outgoing WebHook Integration with **exactly** the following trigger words
 
-`"find me ,search for , map me "`
+`"/find me ,/search for ,/map me "`
 
 and the following Google App Engine URL:
 
@@ -62,14 +62,14 @@ USAGE
 -----
 Examples:
 
-* find me cafes
-* find me vets in richmond vic
-* find me bunnings in melbourne
-* find me curry near 222 lonsdale street, melbourne, vic
-* find me ATMs in 3150
-* find me fish and chips around -38.147518,144.361369
-* find me toilets near opera house
-* find me petrol stations near chadstone shopping centre, vic
+* /find me cafes
+* /find me vets in richmond vic
+* /find me bunnings in melbourne
+* /find me curry near 222 lonsdale street, melbourne, vic
+* /find me ATMs in 3150
+* /find me fish and chips around -38.147518,144.361369
+* /find me toilets near opera house
+* /find me petrol stations near chadstone shopping centre, vic
 
 You can replace "find me " with "search for ", they are treated exactly the same.
 If you start with "map me " instead, it will paste a single Google Static Map link into the Slack response so that the map is fetched.
