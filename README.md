@@ -49,30 +49,26 @@ UPLOAD
 
 SLACK CONFIGURATION
 -------------------
-From the Slack service page, create an Outgoing WebHook Integration with **exactly** the following trigger words
-
-`"/find me ,/search for ,/map me "`
-
-and the following Google App Engine URL:
+From the Slack service page, create an Outgoing WebHook Integration with the following Google App Engine URL:
 
 http://your-app-name.appspot.com/searchBiz 
 
 
 USAGE
 -----
-Examples:
+Examples, if your trigger word is "find me":
 
-* /find me cafes
-* /find me vets in richmond vic
-* /find me bunnings in melbourne
-* /find me curry near 222 lonsdale street, melbourne, vic
-* /find me ATMs in 3150
-* /find me fish and chips around -38.147518,144.361369
-* /find me toilets near opera house
-* /find me petrol stations near chadstone shopping centre, vic
+* find me cafes
+* find me vets in richmond vic
+* find me bunnings in melbourne
+* find me curry near 222 lonsdale street, melbourne, vic
+* find me ATMs in 3150
+* find me fish and chips around -38.147518,144.361369
+* find me toilets near opera house
+* find me petrol stations near chadstone shopping centre, vic
 
-You can replace "find me " with "search for ", they are treated exactly the same.
-If you start with "map me " instead, it will paste a single Google Static Map link into the Slack response so that the map is fetched.
+You can replace "find me ", they are treated exactly the same.
+If the trigger word contains "map me " instead, it will paste a single Google Static Map link into the Slack response so that the map is fetched.
 
 Note that the *what* part (business type or name) of the query is separated from the *where* part using a join word.
 Valid join words are: 

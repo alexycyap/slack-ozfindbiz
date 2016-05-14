@@ -6,7 +6,6 @@ import com.slackozfindbiz.utils.StringUtils
 
 class SearchService {
     private final static def LOG = new GroovyLogger(SearchService.class.name)
-    private final static def SEARCH_PREFIXES = [ '/find me ', '/search for ', '/map me ' ]
     private final static def WHAT_WHERE_SEPARATORS = [ ' near ', ' in ', ' around ', ' nearby ', ' on ', ' at ' ]
     private final static def MAP_BASE_URL = 'http://maps.googleapis.com/maps/api/staticmap?size=400x400&maptype=roadmap'
     
@@ -25,14 +24,9 @@ class SearchService {
         def tokenIsValid = (slackTokens.size() == 0) || (token != null && slackTokens.contains(token))
         
         def inText = params.text?.trim()?.toLowerCase()
-        def searchPrefix = SEARCH_PREFIXES[0]
-        SEARCH_PREFIXES.each( { prefix ->
-            if ( inText.startsWith(prefix) ) {
-                searchPrefix = prefix
-            }
-        } )
+        def searchPrefix = params.trigger_word
         
-        def mapLinkOnly = (searchPrefix == 'map me ')
+        def mapLinkOnly = (searchPrefix.contains('map me'))
          
         def outText = ''
          
