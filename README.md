@@ -36,7 +36,7 @@ Start it locally:
 
 Paste this in your browser
 
-http://localhost:8080/searchBiz?text=/find%20me%20cafes&token=your_slack_token
+http://localhost:8080/searchBiz?trigger_word=find%20me%20&text=find%20me%20cafes%20in%20Richmond%20Vic&token=your_slack_token
 
 You should see a JSON formatted text listing some cafes around the default location you've specified.
 If it doesn't work, look at the console for errors.

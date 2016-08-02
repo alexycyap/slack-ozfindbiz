@@ -92,7 +92,7 @@ class SapiDataSource {
                         includePois: true,
                         rows: 1,
                         mappable: true,
-                        categoryId: ['27952','35408','624684','367865','358989','370208','338408','21962','33839','31445','1002502','1007376'],
+                        categoryId: ['35947', '27952','35408','624684','367865','358989','370208','338408','21962','33839','31445','1002502','1007376'],
                         key: config.ozfindbiz.sapi.key
                         ]
         
@@ -140,9 +140,6 @@ class SapiDataSource {
                         def allListings = []
                         allListings.addAll( jsonInput.results.collect({ listing ->
 
-                            def reviewSummaries = listing.reviewSummaries ? listing.reviewSummaries : []
-                            def yelpSummary = reviewSummaries.find { it.namespace == 'http://www.yelp.com.au' }
-
                             def sapiListing = new SapiListing()
                             sapiListing.id = listing.id
                             sapiListing.name = listing.name
@@ -156,7 +153,6 @@ class SapiDataSource {
                             sapiListing.longitude = listing.primaryAddress?.longitude
                             sapiListing.reportingId = listing.reportingId
                             sapiListing.categoryName = listing.categories ? listing.categories[0]?.name : null
-                            sapiListing.yelpUrl = yelpSummary?.businessPageUrl
                             sapiListing
                         }) )
                         
@@ -254,11 +250,6 @@ class SapiDataSource {
             score = score + 1
         }
 
-        // Treat Yelp as a trusted external validation of this listing.
-        if (listing.yelpUrl) {
-            score = score + 5        
-        }
-        
         score
     }
 
