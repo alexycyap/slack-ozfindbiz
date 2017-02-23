@@ -87,12 +87,21 @@ class SapiDataSource {
     
     private def queryForLandmark(where) {
         def landmarkGeocode = null
+
+        // 35947   : Convention centres
+        // 27952   : Car Parking
+        // 35408   : Universities
+        // 21962   : Tourist attractions
+        // 33839   : Shopping centres
+        // 31445   : Hotels
+        // 1001004 : Parks
         def landmarkSapiParams = [
                         query: where,
                         includePois: true,
                         rows: 1,
                         mappable: true,
-                        categoryId: ['35947', '27952','35408','624684','367865','358989','370208','338408','21962','33839','31445','1002502','1007376'],
+                        intentOverride: 'NAME',
+                        categoryId: ['35947', '27952','35408','21962','33839','31445','1002502','1007376', '1001004'],
                         key: config.ozfindbiz.sapi.key
                         ]
         
